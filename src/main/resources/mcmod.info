@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "Esquisse",
+    "name": "Esquisse",
+    "description": "A mod for special effects.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "alpen_"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
