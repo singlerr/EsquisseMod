@@ -16,9 +16,49 @@ import javax.swing.*;
 import java.awt.*;
 
 public class VideoPanel extends JFrame {
+    private MediaView view;
+    private JFXPanel panel;
+    private Scene scene;
+    private StackPane stackPane;
     public VideoPanel() {
         super();
+        panel = new JFXPanel();
+        getContentPane().add(panel);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                stackPane = new StackPane();
+
+                Media media = new Media("C:\\Users\\Singlerr\\Documents\\oCam\\1.mp4");
+                MediaPlayer player = new MediaPlayer(media);
+
+                view = new MediaView(player);
+
+                Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+                view.setX((screen.getWidth() - panel.getWidth()) / 2);
+                view.setY((screen.getHeight() - panel.getHeight()) / 2);
+
+                // resize video based on screen size
+                DoubleProperty width = view.fitWidthProperty();
+                DoubleProperty height = view.fitHeightProperty();
+                width.bind(Bindings.selectDouble(view.sceneProperty(), "width"));
+                height.bind(Bindings.selectDouble(view.sceneProperty(), "height"));
+                view.setPreserveRatio(true);
+
+                // add video to stackpane
+                stackPane.getChildren().add(view);
+
+                scene = new Scene(stackPane);
+                panel.setScene(scene);
+            }
+        });
+
+
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         setVisible(true);
+
+        view.getMediaPlayer().play();
     }
 
     /*

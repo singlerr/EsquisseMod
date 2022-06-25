@@ -2,7 +2,6 @@ package io.github.singlerr.esquisse;
 
 
 import io.github.singlerr.esquisse.commands.JFrameCommand;
-import javafx.application.Application;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -15,6 +14,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.logging.Logger;
 
 @Mod(
@@ -39,8 +43,13 @@ public class Esquisse {
      * The registry events below will have fired prior to entry to this method.
      */
     @Mod.EventHandler
-    public void preinit(FMLPreInitializationEvent event) {
-
+    public void preinit(FMLPreInitializationEvent event) throws Exception {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                VideoPlayer.launch();
+            }
+        }).start();
     }
 
     /**
@@ -56,15 +65,17 @@ public class Esquisse {
      */
     @Mod.EventHandler
     public void postinit(FMLPostInitializationEvent event) {
-
-        new Thread(() -> {
-            VideoPlayer player = new VideoPlayer();
-            player.launchApp();
-        }).start();
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new VideoPanel();
+            }
+        });
     }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
+
         event.registerServerCommand(new JFrameCommand());
     }
 

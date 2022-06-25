@@ -3,9 +3,7 @@ plugins {
     id("org.openjfx.javafxplugin") version("0.0.13")
  //   id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
-
-
-
+def libraryDest = "META-INF/libraries"
 group = 'io.github.singlerr'
 version = '1.0-SNAPSHOT'
 
@@ -13,6 +11,7 @@ java {
     archivesBaseName = 'Esquisse'
     toolchain.languageVersion = JavaLanguageVersion.of(8)
 }
+
 configurations {
     inJar
     compile.extendsFrom(inJar)
@@ -34,6 +33,7 @@ minecraft {
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
     mappings channel: 'stable', version: '39-1.12'
+
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -102,14 +102,17 @@ repositories {
     //     dir 'libs'
     // }
 }
+/*
 task copyRuntimeLibs(type: Copy){
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from configurations.default
     include "javafx**"
     into "libs"
 }
+*/
 
 dependencies {
+
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
@@ -123,23 +126,63 @@ dependencies {
 
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-
+    //implementation files("libs/jfxrt.jar")
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
 }
+
 
 javafx {
     version = "17.0.1"
-    modules = [ 'javafx.media','javafx.swing' ]
+    modules = ['javafx.media', 'javafx.swing']
     configuration = "inJar"
 }
+/*
+
+task retrieveArtifacts {
+    configurations.shade.resolvedConfiguration.resolvedArtifacts.each {
+        def parent = file(metaDest)
+        if (!parent.exists())
+            parent.mkdir()
+        def file = new File(metaDest, "${it.file.name}.meta")
+
+        if (!file.exists())
+            file.createNewFile()
+        def data = "Maven-Artifact: ${it.moduleVersion.id}"
+        file.write(data)
+    }
+}
+
+shadowJar {
+
+}
+ */
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
-    into("META-INF/libraries") {
-        println "includeInJar: " + configurations.inJar.collect { File file -> file }
+
+    into(libraryDest) {
+        println "included: " + configurations.inJar.collect { File file -> file }
         from configurations.inJar
     }
+
+    /*
+
+    configurations.inJar.resolvedConfiguration.resolvedArtifacts.each{
+        def file = new File(metaDest,"${it.file.name}.meta")
+
+        if(! file.exists())
+            file.createNewFile()
+        def data = "Maven-Artifact: ${it.moduleVersion.id} \n"
+        file.write(data)
+    }
+
+    into("${libraryDest}"){
+        from "${metaDest}"
+    }
+    */
+//    def javaFxDeps = configurations.inJar.collect { it.name }.join(' ')
 
 
     manifest {

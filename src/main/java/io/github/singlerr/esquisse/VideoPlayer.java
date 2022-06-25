@@ -3,36 +3,25 @@ package io.github.singlerr.esquisse;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 
 public class VideoPlayer extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         Platform.setImplicitExit(false);
-
-        JOptionPane.showMessageDialog(null,"asd","asdf",JOptionPane.INFORMATION_MESSAGE);
-        JFXPanel panel = new JFXPanel();
-
-        Media m = new Media(new File("C:\\Users\\Singlerr\\Documents\\oCam\\1.mp4").toURI().toString());
-        MediaPlayer player = new MediaPlayer(m);
-        MediaView viewer = new MediaView(player);
-        viewer.setMediaPlayer(player);
-        Group root = new Group();
-        Scene scene = new Scene(root,600,600);
+        new JFXPanel();
+        Media media = new Media("");
         /*
         // center video position
         javafx.geometry.Rectangle2D screen = Screen.getPrimary().getVisualBounds();
@@ -47,11 +36,7 @@ public class VideoPlayer extends Application {
         viewer.setPreserveRatio(true);
          */
         // add video to stackpane
-        root.getChildren().add(viewer);
-        //player.play();
-        primaryStage.setScene(scene);
         primaryStage.show();
-        player.play();
     }
     public void launchApp(){
         launch();
